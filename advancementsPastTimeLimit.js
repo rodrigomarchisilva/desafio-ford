@@ -1,45 +1,39 @@
-const encryptVinCode = (VIN, secret) => {
+const encryptVinCode = (vinCode, secret) => {
   const SECRET_LENGTH = secret.length;
   const regex = new RegExp(`.{1,${SECRET_LENGTH}}`, 'g');
-  const vinSubstrings = VIN.match(regex) || [];
+  const substrings = vinCode.match(regex) || [];
 
-  const newSubstrings = vinSubstrings.map((substring) => {
+  const encryptedSubstrings = substrings.map((substring) => {
     let encryptedSubstring = '';
 
     for (let i = 0; i < substring.length; i++) {
       const charCode = substring[i].charCodeAt(0) + secret[i].charCodeAt(0);
-      if (charCode > 126) {
-        const extraCharacters = charCode - 126;
-        encryptedSubstring += String.fromCharCode(32 + extraCharacters);
-      } else {
-        encryptedSubstring += String.fromCharCode(charCode);
-      }
+      if (charCode > 126) encryptedSubstring += String.fromCharCode(32 + (charCode - 126));
+      else encryptedSubstring += String.fromCharCode(charCode);
     };
+
     return encryptedSubstring;
   });
 
-  return newSubstrings.join('');
+  return encryptedSubstrings.join('');
 };
 
 const decryptVinCode = (encryptedVinCode, secret) => {
   const SECRET_LENGTH = secret.length;
   const regex = new RegExp(`.{1,${SECRET_LENGTH}}`, 'g');
-  const encryptedVinSubstrings = encryptedVinCode.match(regex) || [];
+  const encryptedSubstrings = encryptedVinCode.match(regex) || [];
 
-  const newSubstrings = encryptedVinSubstrings.map((substring) => {
+  const decryptedSubstrings = encryptedSubstrings.map((substring) => {
     let decryptedSubstring = '';
 
     for (let i = 0; i < substring.length; i++) {
       const charCode = substring[i].charCodeAt(0) - secret[i].charCodeAt(0);
-      if (charCode < 33) {
-        const extraCharacters = 33 - charCode;
-        decryptedSubstring += String.fromCharCode(127 - extraCharacters);
-      } else {
-        decryptedSubstring += String.fromCharCode(charCode);
-      }
-    };
+      if (charCode < 33) decryptedSubstring += String.fromCharCode(127 - (33 - charCode));
+      else decryptedSubstring += String.fromCharCode(charCode);
+    }
+
     return decryptedSubstring;
   });
 
-  return newSubstrings.join('');
+  return decryptedSubstrings.join('');
 };
