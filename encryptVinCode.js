@@ -7,13 +7,16 @@ const encryptVinCode = (VIN, secret) => {
   const vinSubstrings = VIN.match(regex) || [];
 
   vinSubstrings.map((substring) => {
-    const newSubstring = '';
+    let newSubstring = '';
     substring.forEach((character, index) => {
       const charCode = character.charCodeAt(0) + secret[index].charCodeAt(0);
-      if (charCode > 126) {
-
+      if (charCode > 126 && (32 + charCode - 126) > 126) {
+        newSubstring += String.fromCharCode(32 + charCode - 252);
+      } else if (charCode > 126) {
+        newSubstring += String.fromCharCode(32 + charCode - 126);
+      } else {
+        newSubstring += String.fromCharCode(charCode);
       }
-      newSubstring.push();
     });
   });
 };
