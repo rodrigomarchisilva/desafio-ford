@@ -6,16 +6,26 @@ const encryptOrDecryptVinCode = (vinCode, secret, type) => {
     let newSubstring = '';
 
     for (let i = 0; i < substring.length; i++) {
-      const charCode = substring[i].charCodeAt(0) - secret[i].charCodeAt(0);
+      const [substringCode, secretCode] = [substring.charCodeAt(i), secret.charCodeAt(i)];
+      const charCode = type === 'encryption' ? substringCode + secretCode : substringCode - secretCode;
       const condition = type === 'encryption' ? charCode > 126 : charCode < 33;
       const calculatedCharCode = type === 'encryption' ? 32 + (charCode - 126) : 127 - (33 - charCode);
-
-      if (condition) newSubstring += String.fromCharCode(calculatedCharCode);
-      else newSubstring += String.fromCharCode(charCode);
+      newSubstring += condition ? String.fromCharCode(calculatedCharCode) : String.fromCharCode(charCode);
     }
 
-    return decryptedSubstring;
+    return newSubstring;
   });
 
   return newSubstrings.join('');
 };
+
+// Testing purposes:
+
+// const vinCode = '1HGCM82633A004352';
+// const secret = 'mySecret';
+
+// const encryptedCode = encryptOrDecryptVinCode(vinCode, secret, 'encryption');
+// const decryptedCode = encryptOrDecryptVinCode(encryptedCode, secret, 'decryption');
+
+// console.log(encryptedCode);
+// console.log(decryptedCode);
