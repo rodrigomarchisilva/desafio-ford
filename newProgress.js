@@ -7,10 +7,10 @@ const encryptOrDecryptVinCode = (vinCode, secret, type) => {
 
     for (let i = 0; i < substring.length; i++) {
       const [substringCode, secretCode] = [substring.charCodeAt(i), secret.charCodeAt(i)];
-      const charCode = type === 'encryption' ? substringCode + secretCode : substringCode - secretCode;
-      const condition = type === 'encryption' ? charCode > 126 : charCode < 33;
-      const calculatedCharCode = type === 'encryption' ? 32 + (charCode - 126) : 127 - (33 - charCode);
-      newSubstring += condition ? String.fromCharCode(calculatedCharCode) : String.fromCharCode(charCode);
+      const code = type === 'encryption' ? substringCode + secretCode : substringCode - secretCode;
+      const condition = type === 'encryption' ? code > 126 : code < 33;
+      const adaptedCode = type === 'encryption' ? 32 + (code - 126) : 127 - (33 - code);
+      newSubstring += condition ? String.fromCharCode(adaptedCode) : String.fromCharCode(code);
     }
 
     return newSubstring;
@@ -27,5 +27,11 @@ const encryptOrDecryptVinCode = (vinCode, secret, type) => {
 // const encryptedCode = encryptOrDecryptVinCode(vinCode, secret, 'encryption');
 // const decryptedCode = encryptOrDecryptVinCode(encryptedCode, secret, 'decryption');
 
-// console.log(encryptedCode);
-// console.log(decryptedCode);
+// console.log(`Código criptografado: ${encryptedCode}`);
+// console.log(`Código descriptografado: ${decryptedCode}`);
+// console.log(
+//   `${decryptedCode === vinCode
+//     ? 'Código descriptografado é igual ao original'
+//     : 'Código descriptografado é diferente do original'
+//   }`
+// );
